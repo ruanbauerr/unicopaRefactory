@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Image, ImageBackground, SectionList } from "react-native";
 import GameCard from "./components/GameCard";
 import dados from "./assets/dados.json";
+import { formatarData } from "./constants/formatData";
 
 export default function App() {
   const jogos = dados.jogos;
@@ -21,7 +22,7 @@ export default function App() {
   
   const jogosTratados = Object.keys(jogosAgrupados).map((data) =>{
     return {
-      title: data,
+       title: formatarData(data),
       data: jogosAgrupados[data],
     };
   });
