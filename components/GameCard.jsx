@@ -2,15 +2,17 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { getFlag } from "../constants/flags";
 
 export default function GameCard({ game }) {
+  const isBrasil = game.sigla_casa === "BRA" || game.sigla_fora === "BRA";
+
   return (
-    <View style={styles.jogo}>
+    <View style={[styles.jogo, isBrasil && styles.jogoBrasil]}>
       <Text style={styles.grupo}>
-        GRUPO {game.grupo} {game.confronto}
+        {game.grupo ? `GRUPO ${game.grupo} • ` : ""}{game.confronto}
       </Text>
 
       <View style={styles.linhaPrincipal}>
         <View style={styles.time}>
-          <Image style={styles.bandeira} source={getFlag(game.sigla_fora)} />
+          <Image style={styles.bandeira} source={getFlag(game.sigla_casa)} />
           <Text style={styles.sigla}>{game.sigla_casa}</Text>
         </View>
 
@@ -34,12 +36,19 @@ export default function GameCard({ game }) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   jogo: {
     marginBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: "#1e2d3d",
     paddingBottom: 15,
+  },
+  jogoBrasil: {
+    borderLeftWidth: 3,
+    borderLeftColor: "#009c3b",
+    paddingLeft: 10,
+    backgroundColor: "#0a1f12",
   },
   grupo: {
     color: "#8fa3b8",
