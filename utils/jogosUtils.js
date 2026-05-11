@@ -4,7 +4,7 @@ export const formatarData = (data) => {
 };
 
 export const agruparPorData = (jogos) => {
-  return jogos.reduce((acc, jogo) => {
+  const agrupado = jogos.reduce((acc, jogo) => {
     const data = jogo.data_brasilia;
     if (!acc[data]) {
       acc[data] = [];
@@ -12,4 +12,13 @@ export const agruparPorData = (jogos) => {
     acc[data].push(jogo);
     return acc;
   }, {});
+
+  // ordena os jogos de cada dia por horário crescente
+  Object.keys(agrupado).forEach((data) => {
+    agrupado[data].sort((a, b) =>
+      a.hora_brasilia.localeCompare(b.hora_brasilia)
+    );
+  });
+
+  return agrupado;
 };
