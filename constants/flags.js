@@ -218,10 +218,7 @@ SSD: require("../assets/jogos/south sudan.png"),
 TLS: require("../assets/jogos/east Timor.png"),
 };
 
-/**
- * Retorna a bandeira para uma sigla, com fallback para imagem padrão.
- * Uso: <Image source={getFlag(game.sigla_fora)} />
- */
+
 export const getFlag = (sigla) => {
   return flags[sigla] ?? require("../assets/jogos/united nations.png");
 };

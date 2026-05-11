@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, ImageBackground, SectionList } from "rea
 import GameCard from "./components/GameCard";
 import dados from "./assets/dados.json";
 import { formatarData } from "./constants/formatData";
+import DiaCard from "./components/DiaCard";
 
 export default function App() {
   const jogos = dados.jogos;
@@ -43,15 +44,7 @@ export default function App() {
       keyExtractor={(item, index) => item?.id ? item.id.toString() : index}
       renderItem= {()=> null}
       renderSectionHeader={({section}) => (
-        <View style={styles.card}>
-          <Text style={styles.data}>{section.title}</Text>
-            {
-              section.data.map((jogo) => (
-                <GameCard key={jogo.id} game={jogo} />
-              ))
-            }
-          
-        </View>
+        <DiaCard data={section.title} jogos={section.data} />
       )
     
     }
