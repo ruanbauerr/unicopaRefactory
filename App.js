@@ -28,7 +28,7 @@ export default function App() {
   const jogosTratados = Object.keys(jogosAgrupados).map((data) => {
     return {
       title: formatarData(data),
-      dataISO: data,            // 👈 adicionado
+      dataISO: data,           
       data: jogosAgrupados[data],
     };
   });
@@ -50,7 +50,7 @@ export default function App() {
           <DiaCard
             data={section.title}
             jogos={section.data}
-            dataISO={section.dataISO}   // 👈 adicionado
+            dataISO={section.dataISO}   
           />
         )}
       />
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: 200,
     height: 50,
-    // resizeMode removido daqui 👈
+    
   },
   title: {
     marginTop: 10,

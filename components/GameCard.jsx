@@ -1,14 +1,23 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { useState } from "react";
 import { getFlag } from "../constants/flags";
 
 export default function GameCard({ game }) {
   const isBrasil = game.sigla_casa === "BRA" || game.sigla_fora === "BRA";
+  const [favoritado, setFavoritado] = useState(false);
 
   return (
     <View style={[styles.jogo, isBrasil && styles.jogoBrasil]}>
-      <Text style={styles.grupo}>
-        {game.grupo ? `GRUPO ${game.grupo} • ` : ""}{game.confronto}
-      </Text>
+      <View style={styles.headerLinha}>
+        <Text style={styles.grupo}>
+          {game.grupo ? `GRUPO ${game.grupo} • ` : ""}{game.confronto}
+        </Text>
+        <TouchableOpacity onPress={() => setFavoritado(!favoritado)}>
+          <Text style={[styles.estrela, favoritado && styles.estrelaAtiva]}>
+            {favoritado ? "★" : "☆"}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.linhaPrincipal}>
         <View style={styles.time}>
@@ -50,10 +59,22 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     backgroundColor: "#0a1f12",
   },
+  headerLinha: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
   grupo: {
     color: "#8fa3b8",
     fontSize: 12,
-    marginBottom: 10,
+  },
+  estrela: {
+    fontSize: 22,
+    color: "#8fa3b8",
+  },
+  estrelaAtiva: {
+    color: "#f2cc2f",
   },
   linhaPrincipal: {
     flexDirection: "row",
