@@ -1,46 +1,59 @@
 import { StyleSheet, Text, View, Image, ImageBackground, SectionList } from "react-native";
+import { useState, useEffect } from "react";
+import { supabase } from "./utils/supabase";
 import GameCard from "./components/GameCard";
 import dados from "./assets/dados.json";
 import { formatarData, agruparPorData } from "./utils/jogosUtils";
 import DiaCard from "./components/DiaCard";
 
 export default function App() {
-  const jogos = dados.jogos;
+  const [jogos, setJogos] = useState([])
+
+  useEffect(() => {
+    async function carregarJogos(){
+      const { data, error } = await supabase
+        .from('jogos')
+        .select('*')
+        .order('data_brasilia', { ascending: false })
+
+        if(!error){
+          setJogos(data)
+        }
+    }
+    carregarJogos();
+  }, []);
 
   const jogosAgrupados = agruparPorData(jogos);
   
-  const jogosTratados = Object.keys(jogosAgrupados).map((data) =>{
+  const jogosTratados = Object.keys(jogosAgrupados).map((data) => {
     return {
-       title: formatarData(data),
+      title: formatarData(data),
+      dataISO: data,            // 👈 adicionado
       data: jogosAgrupados[data],
     };
   });
-
- 
 
   return (
     <ImageBackground
       style={styles.container}
       source={require("./assets/bg-overlay.png")}
     >
-      <Image style={styles.logo} source={require("./assets/unicopa.png")} />
+      <Image resizeMode="contain" style={styles.logo} source={require("./assets/unicopa.png")} />
 
       <Text style={styles.title}>CALENDÁRIO</Text>
 
       <SectionList
-      sections={jogosTratados}
-      keyExtractor={(item, index) => item?.id ? item.id.toString() : index}
-      renderItem= {()=> null}
-      renderSectionHeader={({section}) => (
-        <DiaCard data={section.title} jogos={section.data} />
-      )
-    
-    }
-
-
+        sections={jogosTratados}
+        keyExtractor={(item, index) => item?.id ? item.id.toString() : index.toString()}
+        renderItem={() => null}
+        renderSectionHeader={({section}) => (
+          <DiaCard
+            data={section.title}
+            jogos={section.data}
+            dataISO={section.dataISO}   // 👈 adicionado
+          />
+        )}
       />
-
-      
     </ImageBackground>
   );
 }
@@ -56,7 +69,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: 200,
     height: 50,
-    resizeMode: "contain",
+    // resizeMode removido daqui 👈
   },
   title: {
     marginTop: 10,
