@@ -1,10 +1,45 @@
 import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getFlag } from "../constants/flags";
+import { supabase } from "../utils/supabase";
+
+const USUARIO_RA = "60002797";
 
 export default function GameCard({ game }) {
   const isBrasil = game.sigla_casa === "BRA" || game.sigla_fora === "BRA";
   const [favoritado, setFavoritado] = useState(false);
+
+  useEffect(() => {
+    async function verificarFavorito() {
+      const { data } = await supabase
+        .from("favoritos")
+        .select("id")
+        .eq("usuario_ra", USUARIO_RA)
+        .eq("jogo_id", game.id)
+        .single();
+
+      if (data) setFavoritado(true);
+    }
+    verificarFavorito();
+  }, []);
+
+  async function toggleFavorito() {
+    if (favoritado) {
+      await supabase
+        .from("favoritos")
+        .delete()
+        .eq("usuario_ra", USUARIO_RA)
+        .eq("jogo_id", game.id);
+
+      setFavoritado(false);
+    } else {
+      await supabase
+        .from("favoritos")
+        .insert([{ usuario_ra: USUARIO_RA, jogo_id: game.id }]);
+
+      setFavoritado(true);
+    }
+  }
 
   return (
     <View style={[styles.jogo, isBrasil && styles.jogoBrasil]}>
@@ -12,7 +47,7 @@ export default function GameCard({ game }) {
         <Text style={styles.grupo}>
           {game.grupo ? `GRUPO ${game.grupo} • ` : ""}{game.confronto}
         </Text>
-        <TouchableOpacity onPress={() => setFavoritado(!favoritado)}>
+        <TouchableOpacity onPress={toggleFavorito}>
           <Text style={[styles.estrela, favoritado && styles.estrelaAtiva]}>
             {favoritado ? "★" : "☆"}
           </Text>
