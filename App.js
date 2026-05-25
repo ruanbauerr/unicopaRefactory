@@ -13,17 +13,48 @@ export default function App() {
   const [grupoSelecionado, setGrupoSelecionado] = useState("TODOS");
 
   useEffect(() => {
-    async function carregarJogos(){
-      const { data, error } = await supabase
-        .from('jogos')
-        .select('*')
-        .order('data_brasilia', { ascending: true })
+    async function carregarJogos() {
+      const jogosJSON = dados.jogos;
+      await supabase
+        .from("jogos")
+        .upsert(jogosJSON, { onConflict: "id" });
 
-        if(!error){
-          setJogos(data)
-        }
+      const { data, error } = await supabase
+        .from("jogos")
+        .select("*")
+        .order("data_brasilia", { ascending: true });
+
+      if (!error) {
+        setJogos(data);
+      } else {
+        console.log("Erro ao carregar jogos:", error.message);
+      }
     }
+
+    async function inserirUsuario() {
+      const { data, error } = await supabase
+        .from("usuarios")
+        .insert([
+          {
+            nome: "Ruan",
+            ra: "60002797",
+            email: "ruanbauer4@gmail.com",
+            senha: "123456",
+            telefone: "46999805172",
+            data_nascimento: "2006-04-18",
+          }
+        ]);
+
+      if (!error) {
+        console.log("Usuário inserido com sucesso!");
+      } else {
+        console.log("Erro ao inserir usuário:", error);
+      }
+    }
+
     carregarJogos();
+    inserirUsuario();
+
   }, []);
 
   const jogosFiltrados = grupoSelecionado === "TODOS"
@@ -49,7 +80,6 @@ export default function App() {
 
       <Text style={styles.title}>CALENDÁRIO</Text>
 
-      {/* Filtro de grupos */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

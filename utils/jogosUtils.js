@@ -1,3 +1,22 @@
+import { supabase } from "./supabase";
+import dados from "../assets/dados.json";
+
+export const importarJogosParaSupabase = async () => {
+  const jogos = dados.jogos;
+
+  const { error } = await supabase
+    .from("jogos")
+    .upsert(jogos, { onConflict: "id" });
+
+  if (error) {
+    console.log("Erro ao importar jogos:", error.message);
+    return { sucesso: false, mensagem: error.message };
+  }
+
+  console.log("Jogos importados com sucesso!");
+  return { sucesso: true, mensagem: "Jogos importados com sucesso!" };
+};
+
 export const formatarData = (data) => {
   const [ano, mes, dia] = data.split("-");
   return `${dia}/${mes}`;
