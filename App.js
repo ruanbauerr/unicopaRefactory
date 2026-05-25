@@ -11,6 +11,7 @@ const GRUPOS = ["TODOS", "A", "B", "C", "D", "E", "F", "G", "H"];
 export default function App() {
   const [jogos, setJogos] = useState([]);
   const [grupoSelecionado, setGrupoSelecionado] = useState("TODOS");
+  const [carregando, setCarregando] = useState(true);
 
   useEffect(() => {
     async function carregarJogos() {
@@ -29,6 +30,8 @@ export default function App() {
       } else {
         console.log("Erro ao carregar jogos:", error.message);
       }
+
+      setCarregando(false);
     }
 
     async function inserirUsuario() {
@@ -99,18 +102,27 @@ export default function App() {
         ))}
       </ScrollView>
 
-      <SectionList
-        sections={jogosTratados}
-        keyExtractor={(item, index) => item?.id ? item.id.toString() : index.toString()}
-        renderItem={() => null}
-        renderSectionHeader={({section}) => (
-          <DiaCard
-            data={section.title}
-            jogos={section.data}
-            dataISO={section.dataISO}   
-          />
-        )}
-      />
+      {carregando ? (
+        <Text style={styles.msgInfo}>Carregando jogos...</Text>
+      ) : jogos.length === 0 ? (
+        <View style={styles.cardVazio}>
+          <Text style={styles.cardVazioTexto}>Nenhum jogo carregado</Text>
+        </View>
+      ) : (
+        <SectionList
+          sections={jogosTratados}
+          keyExtractor={(item, index) => item?.id ? item.id.toString() : index.toString()}
+          renderItem={() => null}
+          renderSectionHeader={({section}) => (
+            <DiaCard
+              data={section.title}
+              jogos={section.data}
+              dataISO={section.dataISO}   
+            />
+          )}
+        />
+      )}
+
     </ImageBackground>
   );
 }
@@ -175,5 +187,25 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 10,
+  },
+  cardVazio: {
+    marginTop: 40,
+    backgroundColor: "#0c1b2a",
+    width: 320,
+    borderRadius: 12,
+    padding: 30,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#1e2d3d",
+  },
+  cardVazioTexto: {
+    color: "#8fa3b8",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  msgInfo: {
+    color: "#8fa3b8",
+    marginTop: 40,
+    fontSize: 14,
   },
 });
