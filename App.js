@@ -1,14 +1,26 @@
-import { StyleSheet, Text, View, Image, ImageBackground, SectionList, ScrollView, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ImageBackground,
+  SectionList,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { useState, useEffect } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { supabase } from "./utils/supabase";
-import GameCard from "./components/GameCard";
 import dados from "./assets/dados.json";
 import { formatarData, agruparPorData } from "./utils/jogosUtils";
 import DiaCard from "./components/DiaCard";
+import LoginScreen from "./screens/LoginScreen";
 
+const Stack = createNativeStackNavigator();
 const GRUPOS = ["TODOS", "A", "B", "C", "D", "E", "F", "G", "H"];
 
-export default function App() {
+function HomeScreen() {
   const [jogos, setJogos] = useState([]);
   const [grupoSelecionado, setGrupoSelecionado] = useState("TODOS");
   const [carregando, setCarregando] = useState(true);
@@ -16,9 +28,7 @@ export default function App() {
   useEffect(() => {
     async function carregarJogos() {
       const jogosJSON = dados.jogos;
-      await supabase
-        .from("jogos")
-        .upsert(jogosJSON, { onConflict: "id" });
+      await supabase.from("jogos").upsert(jogosJSON, { onConflict: "id" });
 
       const { data, error } = await supabase
         .from("jogos")
@@ -35,18 +45,16 @@ export default function App() {
     }
 
     async function inserirUsuario() {
-      const { data, error } = await supabase
-        .from("usuarios")
-        .insert([
-          {
-            nome: "Ruan",
-            ra: "60002797",
-            email: "ruanbauer4@gmail.com",
-            senha: "123456",
-            telefone: "46999805172",
-            data_nascimento: "2006-04-18",
-          }
-        ]);
+      const { data, error } = await supabase.from("usuarios").insert([
+        {
+          nome: "Ruan",
+          ra: "60002797",
+          email: "ruanbauer4@gmail.com",
+          senha: "123456",
+          telefone: "46999805172",
+          data_nascimento: "2006-04-18",
+        },
+      ]);
 
       if (!error) {
         console.log("Usuário inserido com sucesso!");
@@ -57,19 +65,19 @@ export default function App() {
 
     carregarJogos();
     inserirUsuario();
-
   }, []);
 
-  const jogosFiltrados = grupoSelecionado === "TODOS"
-    ? jogos
-    : jogos.filter((jogo) => jogo.grupo === grupoSelecionado);
+  const jogosFiltrados =
+    grupoSelecionado === "TODOS"
+      ? jogos
+      : jogos.filter((jogo) => jogo.grupo === grupoSelecionado);
 
   const jogosAgrupados = agruparPorData(jogosFiltrados);
-  
+
   const jogosTratados = Object.keys(jogosAgrupados).map((data) => {
     return {
       title: formatarData(data),
-      dataISO: data,           
+      dataISO: data,
       data: jogosAgrupados[data],
     };
   });
@@ -79,7 +87,11 @@ export default function App() {
       style={styles.container}
       source={require("./assets/bg-overlay.png")}
     >
-      <Image resizeMode="contain" style={styles.logo} source={require("./assets/unicopa.png")} />
+      <Image
+        resizeMode="contain"
+        style={styles.logo}
+        source={require("./assets/unicopa.png")}
+      />
 
       <Text style={styles.title}>CALENDÁRIO</Text>
 
@@ -93,9 +105,17 @@ export default function App() {
           <TouchableOpacity
             key={grupo}
             onPress={() => setGrupoSelecionado(grupo)}
-            style={[styles.filtroBotao, grupoSelecionado === grupo && styles.filtroBotaoAtivo]}
+            style={[
+              styles.filtroBotao,
+              grupoSelecionado === grupo && styles.filtroBotaoAtivo,
+            ]}
           >
-            <Text style={[styles.filtroTexto, grupoSelecionado === grupo && styles.filtroTextoAtivo]}>
+            <Text
+              style={[
+                styles.filtroTexto,
+                grupoSelecionado === grupo && styles.filtroTextoAtivo,
+              ]}
+            >
               {grupo === "TODOS" ? "TODOS" : `GRUPO ${grupo}`}
             </Text>
           </TouchableOpacity>
@@ -111,25 +131,37 @@ export default function App() {
       ) : (
         <SectionList
           sections={jogosTratados}
-          keyExtractor={(item, index) => item?.id ? item.id.toString() : index.toString()}
+          keyExtractor={(item, index) =>
+            item?.id ? item.id.toString() : index.toString()
+          }
           renderItem={() => null}
-          renderSectionHeader={({section}) => (
+          renderSectionHeader={({ section }) => (
             <DiaCard
               data={section.title}
               jogos={section.data}
-              dataISO={section.dataISO}   
+              dataISO={section.dataISO}
             />
           )}
         />
       )}
-
     </ImageBackground>
+  );
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
+    flex: 1,
     width: "100%",
     backgroundColor: "#040b13",
     alignItems: "center",
@@ -148,11 +180,15 @@ const styles = StyleSheet.create({
   filtroScroll: {
     marginTop: 12,
     marginBottom: 4,
-    maxHeight: 40,
+    flexShrink: 0,
+    maxHeight: 50,
+    width: "100%",
   },
   filtroContainer: {
     paddingHorizontal: 16,
     gap: 8,
+    alignItems: "center",
+    flexGrow: 1,
   },
   filtroBotao: {
     paddingHorizontal: 14,
