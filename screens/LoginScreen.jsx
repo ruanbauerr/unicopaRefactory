@@ -1,7 +1,13 @@
 import { useState } from "react";
 import {
-  View, Text, TextInput, TouchableOpacity,
-  StyleSheet, Image, ImageBackground, ActivityIndicator
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import { supabase } from "../utils/supabase";
 
@@ -82,10 +88,14 @@ export default function LoginScreen({ navigation }) {
           onPress={handleLogin}
           disabled={carregando}
         >
-          {carregando
-            ? <ActivityIndicator color="#040b13" />
-            : <Text style={styles.botaoTexto}>ENTRAR</Text>
-          }
+          {carregando ? (
+            <ActivityIndicator color="#040b13" />
+          ) : (
+            <Text style={styles.botaoTexto}>ENTRAR</Text>
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.replace("Register")}>
+          <Text style={styles.linkCadastro}>Não tem conta? Cadastre-se</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -94,12 +104,12 @@ export default function LoginScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-  flex: 1,
-  width: "100%",        // ← adiciona isso
-  backgroundColor: "#040b13",
-  alignItems: "center",
-  justifyContent: "center",
-},
+    flex: 1,
+    width: "100%", // ← adiciona isso
+    backgroundColor: "#040b13",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   logo: {
     width: 200,
     height: 50,
@@ -140,5 +150,11 @@ const styles = StyleSheet.create({
     color: "#040b13",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  linkCadastro: {
+    color: "#8fa3b8",
+    textAlign: "center",
+    marginTop: 12,
+    fontSize: 13,
   },
 });

@@ -16,6 +16,7 @@ import dados from "./assets/dados.json";
 import { formatarData, agruparPorData } from "./utils/jogosUtils";
 import DiaCard from "./components/DiaCard";
 import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 
 const Stack = createNativeStackNavigator();
 const GRUPOS = ["TODOS", "A", "B", "C", "D", "E", "F", "G", "H"];
@@ -153,12 +154,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -183,12 +184,14 @@ const styles = StyleSheet.create({
     flexShrink: 0,
     maxHeight: 50,
     width: "100%",
+    alignSelf: "center",
   },
   filtroContainer: {
     paddingHorizontal: 16,
     gap: 8,
     alignItems: "center",
     flexGrow: 1,
+    justifyContent: "center",
   },
   filtroBotao: {
     paddingHorizontal: 14,

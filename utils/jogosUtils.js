@@ -32,7 +32,7 @@ export const agruparPorData = (jogos) => {
     return acc;
   }, {});
 
-  // ordena os jogos de cada dia por horário crescente
+ 
   Object.keys(agrupado).forEach((data) => {
     agrupado[data].sort((a, b) =>
       a.hora_brasilia.localeCompare(b.hora_brasilia)
