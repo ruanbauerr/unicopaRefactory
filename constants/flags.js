@@ -9,7 +9,7 @@ export const flags = {
   AUS: require("../assets/jogos/australia.png"),
   AUT: require("../assets/jogos/austria.png"),
   AZE: require("../assets/jogos/azerbaijan.png"),
-
+  
   BAH: require("../assets/jogos/bahamas.png"),
   BHR: require("../assets/jogos/bahrain.png"),
   BAN: require("../assets/jogos/bangladesh.png"),
