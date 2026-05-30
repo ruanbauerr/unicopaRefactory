@@ -17,11 +17,12 @@ import { formatarData, agruparPorData } from "./utils/jogosUtils";
 import DiaCard from "./components/DiaCard";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import PalpitesScreen from "./screens/PalpitesScreen";
 
 const Stack = createNativeStackNavigator();
 const GRUPOS = ["TODOS", "A", "B", "C", "D", "E", "F", "G", "H"];
 
-function HomeScreen() {
+function HomeScreen({ navigation }) {
   const [jogos, setJogos] = useState([]);
   const [grupoSelecionado, setGrupoSelecionado] = useState("TODOS");
   const [carregando, setCarregando] = useState(true);
@@ -45,27 +46,7 @@ function HomeScreen() {
       setCarregando(false);
     }
 
-    async function inserirUsuario() {
-      const { data, error } = await supabase.from("usuarios").insert([
-        {
-          nome: "Ruan",
-          ra: "60002797",
-          email: "ruanbauer4@gmail.com",
-          senha: "123456",
-          telefone: "46999805172",
-          data_nascimento: "2006-04-18",
-        },
-      ]);
-
-      if (!error) {
-        console.log("Usuário inserido com sucesso!");
-      } else {
-        console.log("Erro ao inserir usuário:", error);
-      }
-    }
-
     carregarJogos();
-    inserirUsuario();
   }, []);
 
   const jogosFiltrados =
@@ -94,7 +75,12 @@ function HomeScreen() {
         source={require("./assets/unicopa.png")}
       />
 
-      <Text style={styles.title}>CALENDÁRIO</Text>
+      <TouchableOpacity
+        style={styles.botaoPalpites}
+        onPress={() => navigation.navigate("Palpites")}
+      >
+        <Text style={styles.botaoPalpitesTexto}>Meus Palpites</Text>
+      </TouchableOpacity>
 
       <ScrollView
         horizontal
@@ -156,6 +142,7 @@ export default function App() {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Palpites" component={PalpitesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -246,5 +233,19 @@ const styles = StyleSheet.create({
     color: "#8fa3b8",
     marginTop: 40,
     fontSize: 14,
+  },
+  botaoPalpites: {
+    backgroundColor: "#0c1b2a",
+    borderWidth: 1,
+    borderColor: "#f2cc2f",
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    marginBottom: 8,
+  },
+  botaoPalpitesTexto: {
+    color: "#f2cc2f",
+    fontWeight: "600",
+    fontSize: 13,
   },
 });

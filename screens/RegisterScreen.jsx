@@ -40,20 +40,36 @@ export default function RegisterScreen({ navigation }) {
     if (!validar()) return;
 
     setCarregando(true);
-    const { error } = await supabase.auth.signUp({
+
+    const { data, error } = await supabase.auth.signUp({
       email,
       password: senha,
       options: {
         data: { nome },
       },
     });
-    setCarregando(false);
 
     if (error) {
       setErro("Erro ao cadastrar. Tente novamente.");
-    } else {
-      setSucesso(true);
+      setCarregando(false);
+      return;
     }
+
+    // salva também na tabela usuarios
+    const { error: erroInsert } = await supabase.from("usuarios").insert([
+      {
+        nome: nome,
+        email: email,
+        senha: senha,
+      }
+    ]);
+
+    if (erroInsert) {
+      console.log("Erro ao salvar na tabela usuarios:", erroInsert.message);
+    }
+
+    setCarregando(false);
+    setSucesso(true);
   }
 
   if (sucesso) {

@@ -16,7 +16,7 @@ export default function GameCard({ game }) {
         .select("id")
         .eq("usuario_ra", USUARIO_RA)
         .eq("jogo_id", game.id)
-        .single();
+        .maybeSingle();
 
       if (data) setFavoritado(true);
     }
@@ -45,7 +45,8 @@ export default function GameCard({ game }) {
     <View style={[styles.jogo, isBrasil && styles.jogoBrasil]}>
       <View style={styles.headerLinha}>
         <Text style={styles.grupo}>
-          {game.grupo ? `GRUPO ${game.grupo} • ` : ""}{game.confronto}
+          {game.grupo ? `GRUPO ${game.grupo} • ` : ""}
+          {game.confronto}
         </Text>
         <TouchableOpacity onPress={toggleFavorito}>
           <Text style={[styles.estrela, favoritado && styles.estrelaAtiva]}>
