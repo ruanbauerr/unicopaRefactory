@@ -62,7 +62,7 @@ export default function GameCard({ game }) {
         </View>
 
         <View style={styles.horario}>
-          <Text style={styles.hora}>{game.hora_brasilia}</Text>
+          <Text style={styles.hora}>{game.hora_brasilia?.substring(0, 5)}</Text>
           <Text style={styles.subTitulo}>VS</Text>
         </View>
 
