@@ -18,6 +18,7 @@ import DiaCard from "./components/DiaCard";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import PalpitesScreen from "./screens/PalpitesScreen";
+import MeusPalpitesScreen from "./screens/MeusPalpitesScreen";
 
 const Stack = createNativeStackNavigator();
 const GRUPOS = ["TODOS", "A", "B", "C", "D", "E", "F", "G", "H"];
@@ -75,12 +76,23 @@ function HomeScreen({ navigation }) {
         source={require("./assets/unicopa.png")}
       />
 
-      <TouchableOpacity
-        style={styles.botaoPalpites}
-        onPress={() => navigation.navigate("Palpites")}
-      >
-        <Text style={styles.botaoPalpitesTexto}>Meus Palpites</Text>
-      </TouchableOpacity>
+      <Text style={styles.title}>CALENDÁRIO</Text>
+
+      <View style={styles.botoesContainer}>
+        <TouchableOpacity
+          style={styles.botaoPalpites}
+          onPress={() => navigation.navigate("Palpites")}
+        >
+          <Text style={styles.botaoPalpitesTexto}>🎯 Fazer Palpites</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.botaoPalpites}
+          onPress={() => navigation.navigate("MeusPalpites")}
+        >
+          <Text style={styles.botaoPalpitesTexto}>📋 Meus Palpites</Text>
+        </TouchableOpacity>
+      </View>
 
       <ScrollView
         horizontal
@@ -143,10 +155,12 @@ export default function App() {
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Palpites" component={PalpitesScreen} />
+        <Stack.Screen name="MeusPalpites" component={MeusPalpitesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -164,6 +178,25 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     color: "white",
+  },
+  botoesContainer: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 10,
+    marginBottom: 4,
+  },
+  botaoPalpites: {
+    backgroundColor: "#0c1b2a",
+    borderWidth: 1,
+    borderColor: "#f2cc2f",
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+  },
+  botaoPalpitesTexto: {
+    color: "#f2cc2f",
+    fontWeight: "600",
+    fontSize: 13,
   },
   filtroScroll: {
     marginTop: 12,
@@ -233,19 +266,5 @@ const styles = StyleSheet.create({
     color: "#8fa3b8",
     marginTop: 40,
     fontSize: 14,
-  },
-  botaoPalpites: {
-    backgroundColor: "#0c1b2a",
-    borderWidth: 1,
-    borderColor: "#f2cc2f",
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    marginBottom: 8,
-  },
-  botaoPalpitesTexto: {
-    color: "#f2cc2f",
-    fontWeight: "600",
-    fontSize: 13,
   },
 });
