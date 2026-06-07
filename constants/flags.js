@@ -216,6 +216,8 @@ SSD: require("../assets/jogos/south sudan.png"),
 
 // Timor-Leste
 TLS: require("../assets/jogos/east timor.png"),
+
+CUW: require("../assets/jogos/curacao.png"),
 };
 
 
